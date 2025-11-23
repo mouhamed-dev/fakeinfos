@@ -1,0 +1,237 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6e65c6',
+                        secondary: '#6c757d',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Open graph -->
+    <meta property="og:title" content="Générateur de fausses informations" />
+    <meta property="og:description" content="Créez des codes QR instantanément et gratuitement sans limite." />
+    <meta property="og:image" content="https://qrcode.mouhatech.com/static/Generator/images/qr_code.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://qrcode.mouhatech.com/" />
+    <meta property="og:site_name" content="Générateur de fausses informations" />
+
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+
+
+    <link rel="icon" type="image/png" href="{% static 'fake/images/favicon_identity.png' %}">
+    <link rel="stylesheet" href=" {% static 'fake/css/style.css' %}">
+    <link rel="stylesheet" href=" {% static 'fake/css/pays.css' %}">
+    <title>Générateur de fausses informations</title>
+</head>
+
+<body class="flex items-center justify-center p-4">
+    <div class="w-full max-w-4xl">
+        <!-- Header -->
+        <div class="text-center mb-8 fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">
+                Générateur de fausses informations
+            </h1>
+            <p class="text-white/90 text-lg">Créez de fausses identités personnelles instantanément et gratuitement.</p>
+        </div>
+
+        <!-- carte principale -->
+        <div class="glass-effect rounded-2xl p-6 md:p-8 shadow-2xl fade-in">
+
+            <form action="" id="form" class="space-y-6 flex flex-col gap-4">
+                <div class="flex gap-4 grid-cols-2">
+                    <div class="flex flex-col w-full">
+                        <label for="pays" class="text-lg font-semibold text-gray-700 mb-2">Votre pays</label>
+                        {{ form.pays }}
+                    </div>
+                    <div class="flex flex-col w-full">
+                        <label for="genre" class="text-lg font-semibold text-gray-700 mb-2">Votre genre</label>
+                        {{ form.genre }}
+                    </div>
+                </div>
+
+                <!-- bouton generate -->
+                <button type="submit" id="generateBtn"
+                    class="w-full py-3 px-6 rounded-xl text-white font-semibold text-lg shadow-lg"
+                    style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">
+                    <span class="flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Générer une identité
+                    </span>
+                </button>
+            </form>
+
+
+            <div id="div-infos" class="space-y-8 mt-8" style="display: none;">
+                <div class="space-y-6">
+                    <!-- Informations personnelles -->
+                    <h2 class="text-xl font-semibold text-gray-700 mb-6 border-b border-gray-200 pb-2">Informations
+                        personnelles</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="prenom" class="text-lg font-semibold">Prénom</label>
+                            <p id="data-prenom" class="text-gray-700">{{ last_identity_data.prenom|default:"-" }}</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="nom" class="text-lg font-semibold">Nom</label>
+                            <p id="data-nom" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2 col-span-2 md:col-span-1">
+                            <label for="email" class="text-lg font-semibold">Email</label>
+                            <p id="data-email" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="telephone" class="text-lg font-semibold">Téléphone</label>
+                            <p id="data-phone" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="age" class="text-lg font-semibold">Âge</label>
+                            <p id="data-age" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="genre" class="text-lg font-semibold">Genre</label>
+                            <p id="data-genre" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="date_naissance" class="text-lg font-semibold">Date de naissance</label>
+                            <p id="data-date_naissance" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="profession" class="text-lg font-semibold">Profession</label>
+                            <p id="data-profession" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="groupe_sanguin" class="text-lg font-semibold">Groupe sanguin</label>
+                            <p id="data-groupe_sanguin" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="poids" class="text-lg font-semibold">Poids</label>
+                            <p id="data-poids" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="taille" class="text-lg font-semibold">Taille</label>
+                            <p id="data-taille" class="text-gray-700">-</p>
+                        </div>
+                    </div>
+                    <!-- Coordonnées géographiques -->
+                    <h2 class="text-xl font-semibold text-gray-700 pt-6 border-b border-gray-200 pb-2">Coordonnées
+                        géographiques</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 pt-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="pays" class="text-lg font-semibold">Pays</label>
+                            <p id="data-pays" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="region" class="text-lg font-semibold">Région/Province</label>
+                            <p id="data-province" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="district" class="text-lg font-semibold">District</label>
+                            <p id="data-district" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="ville" class="text-lg font-semibold">Ville/Commune</label>
+                            <p id="data-ville_commune" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="code_postal" class="text-lg font-semibold">Code postal</label>
+                            <p id="data-code_postal" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="adresse" class="text-lg font-semibold">Adresse</label>
+                            <p id="data-adresse" class="text-gray-700">-</p>
+                        </div>
+                    </div>
+                    <!-- Informations d'identification -->
+                    <h2 class="text-xl font-semibold text-gray-700 pt-6 border-b border-gray-200 pb-2">Informations
+                        d'identification</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-3 pt-2 gap-4">
+                        <div class="flex flex-col gap-2">
+                            <label for="recto" class="text-lg font-semibold">N° CNI (recto)</label>
+                            <p id="data-cni_recto" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="verso" class="text-lg font-semibold">N° CNI (verso)</label>
+                            <p id="data-cni_verso" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="passeport" class="text-lg font-semibold">N° passeport</label>
+                            <p id="data-num_passport" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="ninea" class="text-lg font-semibold">N° NINEA</label>
+                            <p id="data-num_ninea" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="rcmm" class="text-lg font-semibold">N° RCCM</label>
+                            <p id="data-num_rccm" class="text-gray-700">-</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="permis" class="text-lg font-semibold">N° Permis</label>
+                            <p id="data-num_permis" class="text-gray-700">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-3 flex-wrap justify-center mt-8">
+                <button id="downloadBtn"
+                    class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                    </svg>
+                    Télécharger
+                </button>
+                <button id="resetBtn"
+                    class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-medium flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                    Réinitialiser
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-12 lg:mt-32 text-white/80 text-sm">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p>Générateur d'identités gratuit et sans limite</p>
+                <p>Developpé par <a href="https://mouhatech.com" target="_blank"><span class="text-white font-bold">MouhaTech</span></a></p>
+            </div>
+        </div>
+    </div>
+    {{ last_identity|json_script:"last-identity-data" }}
+    <script src="{% static 'fake/js/script.js' %}"></script>
+</body>
+</html>
