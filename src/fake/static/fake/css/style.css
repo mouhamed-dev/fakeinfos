@@ -1,8 +1,8 @@
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #163e5d 0%, #163e5d 100%);
     min-height: 100vh;
-    color: #6e65c6;
+    color: #163e5d;
     overflow-x: hidden;
 }
 
@@ -19,10 +19,6 @@ select {
 }
 
 
-
-
-
-
 .glass-effect {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -31,7 +27,7 @@ select {
 
 .input-focus:focus {
     outline: none;
-    border-color: #6e65c6;
+    border-color: #163e5d;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 

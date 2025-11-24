@@ -32,7 +32,7 @@
 
 /* Focus (équivalent Tailwind: border-primary / ring-primary) */
 .select2-container--default.select2-container--focus .select2-selection--single {
-    border: 2px solid #8b5cf6; /* violet */
+    border: 2px solid #163e5d; /* bleu */
 }
 
 /* Texte sélectionné */
@@ -80,7 +80,7 @@
 }
 
 .select2-container--default .select2-search--dropdown .select2-search__field:focus {
-    border: 2px solid #8b5cf6; /* violet */
+    border: 2px solid #163e5d; /* violet */
 }
 
 /* ============================
@@ -108,7 +108,7 @@
 
 /* Surbrillance */
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-    background: #8b5cf6 !important; /* violet */
+    background: #163e5d !important; /* violet */
     color: #ffffff !important;
 }
 
@@ -121,6 +121,6 @@
     border-radius: 1rem;
 }
 .select2-results__options::-webkit-scrollbar-thumb {
-    background-color: #8b5cf6; /* violet */
+    background-color: #163e5d; /* violet */
     border-radius: 1rem;
 }
