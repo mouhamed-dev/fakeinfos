@@ -1,7 +1,7 @@
 
 Licence MIT
 
-Copyright (c) 2025 [Mohamed Mbaye](https://mouhatech.com)
+Copyright (c) 2025 <a href="https://mouhatech.com" target="_blank" rel="noopener noreferrer">Mouhamed Mbaye</a>
 
 La permission est accordée, à titre gratuit, à toute personne obtenant une copie
 de ce logiciel et de sa documentation associée (le « Logiciel »), de traiter

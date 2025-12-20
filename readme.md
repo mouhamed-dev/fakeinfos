@@ -1,4 +1,4 @@
-# FakeInfos
+# FakeInfos - MouhaTech
 
 ## Description
 
@@ -81,7 +81,7 @@ FakeInfos est une application web Django conçue pour générer des identités f
 4. Les données générées s'affichent à l'écran.
 5. Utilisez le token fourni pour accéder à l'identité ultérieurement via l'URL `?ref=<token>`.
 6. Cliquez sur "Télécharger PDF" pour exporter la fiche d'identité.
-7. Testez le projet en ligne sur [Download.MouhaTech](download.mouhatech.com)
+7. Testez le projet en ligne sur [Download.MouhaTech](https://download.mouhatech.com)
 
 ## Configuration
 
