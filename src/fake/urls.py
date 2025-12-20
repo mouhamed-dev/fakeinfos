@@ -8,4 +8,3 @@ urlpatterns = [
     path('api/download/', download.download_pdf, name='download_pdf'),
 ]
 
-#merci

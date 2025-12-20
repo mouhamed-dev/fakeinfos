@@ -21,7 +21,7 @@ def home(request):
     last_identity_data = None
     identity = None
 
-    # 1. On récupère le token depuis l'URL (le paramètre s'appelle 'ref')
+    # . On récupère le token depuis l'URL 'ref'
     token = request.GET.get("ref") 
     
     if token:
@@ -30,14 +30,14 @@ def home(request):
         except Identity.DoesNotExist:
             pass 
 
-    # 2. Si pas de token URL, on regarde la session
+    # si pas de token URL
     if not identity and request.session.get('last_identity_id'):
         try:
             identity = Identity.objects.get(id=request.session['last_identity_id'])
         except Identity.DoesNotExist:
             request.session.pop('last_identity_id', None)
 
-    # 3. Construction des données
+    # Construction des données
     if identity:
         last_identity_data = {
             'prenom': identity.prenom,
@@ -63,7 +63,7 @@ def home(request):
             'num_ninea': identity.num_ninea,
             'num_rccm': identity.num_rccm,
             'num_permis': identity.num_permis,
-            'token': str(identity.token) # Important
+            'token': str(identity.token)
         }
 
     # Convertir en JSON
@@ -71,15 +71,15 @@ def home(request):
 
     return render(request, 'fake/index.html', {
         'form': form,
-        # Important : passer last_identity pour que le JS le lise au chargement
+        # Passer last_identity pour que le JS le lise au chargement
         'last_identity': last_identity_json 
     })
 
 
 
-# ===================== Génération d'identités fictives =====================
+# ===========✅========== Génération d'identités fictives =====================
 
-# Load knowledge base PDF once at startup
+
 _encoded_pdf = None
 _pdf_error = None
 _pdf_path_candidates = [
@@ -232,10 +232,10 @@ def generate_identity(request):
     try:
         client = genai.Client(api_key=api_key)
 
-        # Construire le prompt avec pays et genre
+        # prompt avec pays et genre
         user_prompt = f"Génère une identité fictive complète pour un(e) {genre} du pays {pays}."
 
-        # Préparer le contenu avec ou sans PDF
+
         contents = [
             {
                 "role": "user",
@@ -269,12 +269,12 @@ def generate_identity(request):
             except json.JSONDecodeError:
                 pass
 
-        # Si pas trouvé, essayer de parser toute la réponse comme JSON
+
         if identity_data is None:
             try:
                 identity_data = json.loads(text)
             except json.JSONDecodeError:
-                # Essayer de nettoyer la réponse et réessayer
+                
                 cleaned = re.sub(r'```json\s*', '', text)
                 cleaned = re.sub(r'```\s*', '', cleaned)
                 cleaned = cleaned.strip()
@@ -285,7 +285,7 @@ def generate_identity(request):
                         'error': 'Impossible de parser la réponse JSON de l\'IA. Réponse reçue: ' + text[:200]
                     }, status=500)
 
-        # Valider que tous les champs requis sont présents
+        # S'assurer que tous les champs requis sont présents
         required_fields = [
             'prenom', 'nom', 'email', 'phone', 'age', 'genre', 'date_naissance',
             'profession', 'groupe_sanguin', 'poids', 'taille', 'pays', 'province',
@@ -299,18 +299,17 @@ def generate_identity(request):
 
         # Sauvegarder l'identité en base de données
         try:
-            # Convertir la date de naissance si elle est au format string
+            
             date_naissance = None
             if identity_data.get('date_naissance'):
                 date_str = identity_data['date_naissance']
-                # Essayer différents formats de date
                 for fmt in ['%d/%m/%Y', '%Y-%m-%d', '%d-%m-%Y', '%Y/%m/%d']:
                     try:
                         date_naissance = datetime.strptime(date_str, fmt).date()
                         break
                     except ValueError:
                         continue
-                # Si aucun format ne fonctionne, utiliser la date d'aujourd'hui moins l'âge
+                    
                 if date_naissance is None:
                     try:
                         age = int(re.sub(r'[^0-9]', '', identity_data.get('age', '25')))
@@ -345,15 +344,13 @@ def generate_identity(request):
                 num_permis=identity_data.get('num_permis', ''),
             )
 
-            # Stocker l'ID dans la session
+                # Stocker l'ID en session
             request.session['last_identity_id'] = identity.id
 
-            # On envoie le token au frontend pour l'URL (ex: ?ref=abcd-1234...)
+
             identity_data['token'] = str(identity.token)
 
         except Exception as e:
-            # Si la sauvegarde échoue, on continue quand même à retourner les données
-            # mais on log l'erreur (en production, utiliser logging)
             pass
 
         return JsonResponse(identity_data)

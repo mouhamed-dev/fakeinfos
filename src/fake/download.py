@@ -1,4 +1,3 @@
-# --- Imports à ajouter en haut de views.py ---
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -6,11 +5,9 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 from . models import Identity
 
-# --- Nouvelle fonction à la fin de views.py ---
 def download_pdf(request):
     """Génère un PDF avec les informations de la dernière identité."""
     
-     # 1. On cherche d'abord le token dans l'URL (C'est ça qui va sauver la prod)
     token = request.GET.get('ref')
     identity = None
 
@@ -20,7 +17,6 @@ def download_pdf(request):
         except Identity.DoesNotExist:
             pass
     
-    # 2. Si pas de token, on essaie l'ancienne méthode (Session)
     if not identity:
         identity_id = request.session.get('last_identity_id')
         if identity_id:
@@ -32,16 +28,14 @@ def download_pdf(request):
     if not identity:
         return HttpResponse("Identité introuvable ou expirée.", status=404)
 
-
-    # 2. Préparer la réponse HTTP (type fichier PDF)
     response = HttpResponse(content_type='application/pdf')
     filename = f"Identite_{identity.prenom}_{identity.nom}.pdf"
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
-    # 3. Création du Canvas (le document PDF)
+
     p = canvas.Canvas(response, pagesize=A4)
     width, height = A4
-    y = height - 2 * cm  # Position verticale de départ (haut de page)
+    y = height - 2 * cm # Marge supérieure
 
     p.setTitle(f"Fiche d'Identité - {identity.prenom} {identity.nom}")
     p.setAuthor("MouhaTech")
@@ -64,11 +58,11 @@ def download_pdf(request):
         
         p.setFont("Helvetica", 12)
         p.setFillColor(colors.darkslategray)
-        # On décale la valeur vers la droite
-        p.drawString(7 * cm, y, str(value) if value else "-")
-        y -= 0.8 * cm # Espace entre les lignes
         
-        # Saut de page si on arrive en bas
+        p.drawString(7 * cm, y, str(value) if value else "-")
+        y -= 0.8 * cm
+        
+        
         if y < 2 * cm:
             p.showPage()
             y = height - 2 * cm
@@ -77,7 +71,7 @@ def download_pdf(request):
     p.setFont("Helvetica-Bold", 14)
     p.setFillColor(colors.gray)
     p.drawString(2 * cm, y, "INFORMATIONS PERSONNELLES")
-    # Ligne de séparation
+    
     p.setStrokeColor(colors.lightgrey)
     p.line(2 * cm, y - 0.2*cm, width - 2*cm, y - 0.2*cm)
     y -= 1 * cm
@@ -93,7 +87,7 @@ def download_pdf(request):
     draw_line("Gr. Sanguin", identity.groupe_sanguin)
     draw_line("Taille / Poids", f"{identity.taille} / {identity.poids}")
 
-    y -= 0.5 * cm # Espacement supplémentaire
+    y -= 0.5 * cm
 
     # --- Section 2 : Coordonnées géographiques ---
     p.setFont("Helvetica-Bold", 14)
@@ -131,23 +125,20 @@ def download_pdf(request):
     footer_text = f"Généré par {name} - Document Fictif"
     site_url = "https://mouhatech.com"
 
-    # 1. Augmentation de la taille de police (de 8 à 10)
+    # taille et style du texte
     p.setFont("Helvetica-Oblique", 10)
     p.setFillColor(colors.gray)
 
-    # 2. Calcul pour centrer le texte parfaitement
+    # Centrer le texte
     text_width = p.stringWidth(footer_text, "Helvetica-Oblique", 10)
     x_pos = (width - text_width) / 2
     y_pos = 1 * cm
 
-    # 3. Dessiner le texte
     p.drawString(x_pos, y_pos, footer_text)
 
-    # 4. Créer la zone cliquable (Lien) par-dessus le texte
-    # Format du rectangle : (x1, y1, x2, y2) -> (gauche, bas, droite, haut)
+    # Liens
     p.linkURL(site_url, (x_pos, y_pos - 2, x_pos + text_width, y_pos + 10), relative=1)
 
-    # 4. Fermeture et envoi
     p.showPage()
     p.save()
     return response
