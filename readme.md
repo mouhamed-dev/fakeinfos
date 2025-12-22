@@ -1,5 +1,7 @@
 # FakeInfos - MouhaTech
 
+![Couverture du projet](src/fake/static/fake/images/work.jpg)
+
 ## Description
 
 FakeInfos est une application web Django conçue pour générer des identités fictives complètes et cohérentes. Utilisant l'API Google GenAI, l'application crée des données personnelles plausibles pour des fins de test, de développement ou d'illustration. Les identités générées incluent des informations telles que le nom, l'email, le téléphone, l'adresse, les documents d'identification, etc.

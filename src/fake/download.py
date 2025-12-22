@@ -49,7 +49,7 @@ def download_pdf(request):
     p.drawString(2 * cm, y, "Fiche d'Identité Fictive")
     y -= 1.5 * cm
 
-    # Fonction utilitaire pour écrire une ligne
+    # Fonction utilitaire
     def draw_line(label, value):
         nonlocal y
         p.setFont("Helvetica-Bold", 12)
@@ -121,7 +121,7 @@ def download_pdf(request):
 
 
     # --- Footer ---
-    name = "https://mouhatech.com"
+    name = "MouhaTech"
     footer_text = f"Généré par {name} - Document Fictif"
     site_url = "https://mouhatech.com"
 

@@ -21,7 +21,7 @@ def home(request):
     last_identity_data = None
     identity = None
 
-    # . On récupère le token depuis l'URL 'ref'
+    
     token = request.GET.get("ref") 
     
     if token:
@@ -30,7 +30,7 @@ def home(request):
         except Identity.DoesNotExist:
             pass 
 
-    # si pas de token URL
+
     if not identity and request.session.get('last_identity_id'):
         try:
             identity = Identity.objects.get(id=request.session['last_identity_id'])
@@ -71,7 +71,7 @@ def home(request):
 
     return render(request, 'fake/index.html', {
         'form': form,
-        # Passer last_identity pour que le JS le lise au chargement
+        
         'last_identity': last_identity_json 
     })
 
@@ -245,7 +245,7 @@ def generate_identity(request):
             }
         ]
 
-        # Ajouter le PDF si disponible
+        
         if _encoded_pdf:
             contents[0]["parts"].append(
                 {"inline_data": {"mime_type": "application/pdf", "data": _encoded_pdf}}
@@ -258,10 +258,10 @@ def generate_identity(request):
 
         text = getattr(response, 'text', None) or ''
 
-        # Extraire le JSON de la réponse
+       
         identity_data = None
 
-        # Essayer de trouver un bloc JSON dans la réponse
+
         json_match = re.search(r'\{[^{}]*"prenom"[^{}]*\}', text, re.DOTALL)
         if json_match:
             try:
@@ -285,7 +285,7 @@ def generate_identity(request):
                         'error': 'Impossible de parser la réponse JSON de l\'IA. Réponse reçue: ' + text[:200]
                     }, status=500)
 
-        # S'assurer que tous les champs requis sont présents
+        # les champs requis sont présents
         required_fields = [
             'prenom', 'nom', 'email', 'phone', 'age', 'genre', 'date_naissance',
             'profession', 'groupe_sanguin', 'poids', 'taille', 'pays', 'province',
