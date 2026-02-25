@@ -51,7 +51,7 @@ FakeInfos est une application web Django conçue pour générer des identités f
    ```
 
 4. **Configurez les variables d'environnement :**
-   Créez un fichier `.env` dans le dossier `src/fake/` avec les variables suivantes :
+   Créez un fichier `env` dans le dossier `src/fake/` avec les variables suivantes :
 
    ```
    SECRET_KEY=votre-cle-secrete-django

@@ -1,9 +1,7 @@
 
 $(document).ready(function () {
 
-    /* ==========================================
-       1. CONFIGURATION SELECT2
-       ========================================== */
+
     function formatCountry(country) {
         if (!country.id) return country.text;
         let code = country.id.toLowerCase();
@@ -36,9 +34,6 @@ $(document).ready(function () {
         width: "100%"
     });
 
-    /* ==========================================
-       2. FONCTION D'AFFICHAGE DES DONNÉES
-       ========================================== */
     let currentToken = null;
     function fillIdentityData(data) {
 
@@ -46,7 +41,6 @@ $(document).ready(function () {
             currentToken = data.token;
         }
 
-        // On remplit tous les champs
         $('#data-prenom').text(data.prenom || '-');
         $('#data-nom').text(data.nom || '-');
         $('#data-email').html(data.email ? `<u>${data.email}</u>` : '-');
@@ -71,13 +65,9 @@ $(document).ready(function () {
         $('#data-num_rccm').text(data.num_rccm || '-');
         $('#data-num_permis').text(data.num_permis || '-');
 
-        // Afficher la div
         $('#div-infos').fadeIn(500);
     }
 
-    /* ==========================================
-       3. CHARGEMENT INITIAL (Via JSON_SCRIPT)
-       ========================================== */
     const identityScript = document.getElementById('last-identity-data');
     if (identityScript) {
         try {
@@ -88,9 +78,6 @@ $(document).ready(function () {
         } catch (e) {}
     }
 
-    /* ==========================================
-       4. SOUMISSION DU FORMULAIRE (AJAX)
-       ========================================== */
     let originalButtonText = $('#generateBtn').html();
     let isGenerating = false;
 
@@ -126,7 +113,6 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/generate/',
             method: 'POST',
-            // IMPORTANT : Ajout du Token CSRF pour Django
             headers: { "X-CSRFToken": "{{ csrf_token }}" },
             contentType: 'application/json',
             data: JSON.stringify({
@@ -142,7 +128,7 @@ $(document).ready(function () {
                 }
             },
             error: function (xhr) {
-                console.error("Erreur AJAX:", xhr); // Voir la console pour les détails
+                console.error("Erreur AJAX:", xhr);
                 let errorMsg = 'Une erreur est survenue lors de la génération.';
                 if (xhr.responseJSON && xhr.responseJSON.error) {
                     errorMsg = xhr.responseJSON.error;
@@ -157,21 +143,16 @@ $(document).ready(function () {
         });
     });
 
-    /* --- BOUTON TÉLÉCHARGER --- */
     $('#downloadBtn').on('click', function (e) {
         e.preventDefault();
         
         if ($('#div-infos').is(':visible') && currentToken) {
-            // On passe le token dans l'URL !
             window.location.href = "/api/download/?ref=" + currentToken;
         } else {
             alert("Veuillez d'abord générer une identité.");
         }
     });
 
-    /* ==========================================
-       5. BOUTON RÉINITIALISER
-       ========================================== */
     $('#resetBtn').on('click', function () {
         $('#div-infos').fadeOut(500);
         $('#form')[0].reset();
@@ -184,7 +165,7 @@ $(document).ready(function () {
         $.ajax({
             url: '/api/reset/',
             method: 'POST',
-            headers: { "X-CSRFToken": "{{ csrf_token }}" }, // Token ici aussi
+            headers: { "X-CSRFToken": "{{ csrf_token }}" },
             success: function () {
                 console.log("Session nettoyée");
             }
